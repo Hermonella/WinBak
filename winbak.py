@@ -24,11 +24,11 @@ for items in excluded_files_and_folders:
     
     working_excluded_files_and_folders.append(pathlib.Path(source_drive_letter + items))
 
-
+#Walk down Source_dir to find folder and files
 for root, dirs, files in os.walk(source_dir, topdown=False):
     for name in dirs:
         x = (pathlib.Path(os.path.join(root, name)))  
-        list_of_files.insert(0, x)
+        list_of_files.insert(0, x) #Place folders first in list
     for name in files:
         x = (pathlib.Path(os.path.join(root, name)))  
         list_of_files.append(x)
