@@ -1,71 +1,54 @@
 import shutil
-from pathlib import Path
+import pathlib
 import os
 
-source_dir: str = Path('C:/WORKFOLDER/WinBak/Test Folders/Source')
-target_dir: str = Path('C:/WORKFOLDER/WinBak/Test Folders/Destination')
+
+
+
+source_dir: str = pathlib.Path('C:/WORKFOLDER/WinBak/Test Folders/Source/')
+target_dir: str = pathlib.Path('C:/WORKFOLDER/WinBak/Test Folders/Destination/')
 
 list_of_files = []
-
-# shutil.rmtree(target_dir)
 
 source_drive_letter = "C"
 
 excluded_files_and_folders = [
-r'://WORKFOLDER//WinBak//Test Folders//Source//Folder2',
-r'://WORKFOLDER//WinBak//Test Folders//Source//Folder4'
+":/WORKFOLDER/WinBak/Test Folders/Source/Folder2",
+":/WORKFOLDER/WinBak/Test Folders/Source/Folder4"
 ]
 
-print ("Excluded: ")
-print (excluded_files_and_folders)
-working_excluded_files_and_folders = []
+
 #Create the working Excluded list: 
+working_excluded_files_and_folders = []
 for items in excluded_files_and_folders:
     
-    working_excluded_files_and_folders.append(Path(source_drive_letter + items))
+    working_excluded_files_and_folders.append(pathlib.Path(source_drive_letter + items))
 
-print("working Excluded: ")
-print(working_excluded_files_and_folders)
 
-# list_of_files_to_copy = any(excluded_files in source_dir for excluded_files in source_dir)
-# print(list_of_files_to_copy)
-
-# for folder, subfolder, file in os.walk(source_dir):
-    # print (root)
-    # print (dirs)
-    # print (filenames)
-    # x = os.path.join(root, dirs, filenames)
-    # if x in excluded_files:
-    #     continue
 for root, dirs, files in os.walk(source_dir, topdown=False):
     for name in dirs:
-        x = (os.path.join(root, name))
-        list_of_files.append(x)
+        x = (pathlib.Path(os.path.join(root, name)))  
+        list_of_files.insert(0, x)
     for name in files:
-        x = (os.path.join(root, name))  
+        x = (pathlib.Path(os.path.join(root, name)))  
         list_of_files.append(x)
     for item in list_of_files:
-        item = source_drive_letter + item
-        # print ("item: " + item)
         if item in working_excluded_files_and_folders:
-           list_of_files.remove(item)
+            print("Found exception. removing")
+            list_of_files.remove(item)
+        else: 
+            pass
+
         
-for items in list_of_files: 
-    print (items)
 
-
-# #ignores excluded directories and .exe files
-# def get_ignored(path, filenames):
-#     print("Ignored")
-#     ret = []
-#     for filename in filenames:
-#         if os.path.join(path, filename) in to_exclude:
-#             ret.append(filename)
-#         elif filename.endswith(".exe"):
-#             ret.append(filename)
-#     return ret
-
-# shutil.copytree(source_dir , target_dir ,ignore=get_ignored)
-
-# for f in os.listdir(target_dir):
-#     print(f)
+for items in list_of_files:
+    if os.path.isdir(items):
+        x = target_dir / items.relative_to(items.anchor)
+        x.mkdir(parents=True, exist_ok=True) #Create directory in Target_dir
+        # print("x: " + str(x)) #Debug
+        pass
+    if os.path.isfile(items):
+        x = target_dir / items.relative_to(items.anchor)
+        shutil.copy(items, x)
+        pass
+    # else: print("Error with: " + str(items))
