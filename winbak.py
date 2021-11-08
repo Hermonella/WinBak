@@ -6,7 +6,7 @@ import sys
 from getpass import getpass, getuser
 import socket
 from tkinter import Tk, filedialog
-
+import itertools
 import fnmatch
 
 def func_smb_get_server_address():
@@ -32,45 +32,68 @@ def func_smb_get_server_address():
         print("Error with Server address. Check speilling.")
         sys.exit
 
-source_dir: str = pathlib.Path('C:/WORKFOLDER/WinBak/Test Folders/Source/')
-target_dir: str = pathlib.Path('C:/WORKFOLDER/WinBak/Test Folders/Destination/')
-
-list_of_files = []
-
-# source_drive_letter = input("Source Drive Letter: ")
-print("Choose witch drive to backup: ")
-source_drive_letter = pathlib.Path(filedialog.askdirectory(title = "Choose drive to backup"))
-print(source_drive_letter)
-
 #Setup TKinter:
 root = Tk() #Sett root to Tk()
 root.withdraw() #Hides small tkinger window. Try without it once.
 root.attributes('-topmost', True) #Open tkinter window over everything else.
 
-smb_domain = input("SMB Domain: ")
-smb_user = input("SMB Username: ") 
-smb_password = getpass(prompt="SMB Password: ")
-smb_local_machine_name = socket.gethostname()
-# smb_server_name = input("SMB Server name: ")
-# smb_server_address = func_smb_get_server_address()
-# smb_server_backup_location = 
-print("Select backup target location: ")
-smb_server_backup_target_location = pathlib.Path(filedialog.askdirectory(title = "Select backup target location")) #returns Server location Path
-print(smb_server_backup_target_location)
+
+source_dir: str = pathlib.Path('C:/WORKFOLDER/WinBak/Test Folders/Source/')
+target_dir: str = pathlib.Path('C:/WORKFOLDER/WinBak/Test Folders/Destination/')
+
+list_of_files = []
+
+debugmode = True
+
+if debugmode == True: 
+    source_drive_letter = pathlib.Path("C:\\")
+    print(source_drive_letter)
+    smb_domain = "x"
+    smb_user = "x"
+    smb_password = "x"
+    smb_local_machine_name = socket.gethostname()
+    smb_server_backup_target_location = pathlib.Path("C:\WORKFOLDER\WinBak\Test Folders\Destination") #returns Server location Path
+    print(smb_server_backup_target_location)
+
+else:
+    # source_drive_letter = input("Source Drive Letter: ")
+    print("Choose witch drive to backup: ")
+    source_drive_letter = pathlib.Path(filedialog.askdirectory(title = "Choose drive to backup"))
+    print(source_drive_letter)
+
+
+    #Set all SMB variables. Such as wich drive to backup, and where to save it.
+    smb_domain = input("SMB Domain: ")
+    smb_user = input("SMB Username: ") 
+    smb_password = getpass(prompt="SMB Password: ")
+    smb_local_machine_name = socket.gethostname()
+    # smb_server_name = input("SMB Server name: ")
+    # smb_server_address = func_smb_get_server_address()
+    # smb_server_backup_location = 
+    print("Select backup target location: ")
+    smb_server_backup_target_location = pathlib.Path(filedialog.askdirectory(title = "Select backup target location")) #returns Server location Path
+    # print(smb_server_backup_target_location)
 
 #TODO: The above script needs to handle empty inputs.
 
 excluded_files_and_folders = [
-":/WORKFOLDER/WinBak/Test Folders/Source/Folder2",
-":/WORKFOLDER/WinBak/Test Folders/Source/Folder4"
+"WORKFOLDER/WinBak/Test Folders/Source/Folder2/*",
+"WORKFOLDER/WinBak/Test Folders/Source/Folder4/*"
 ]
 
 
 #Create the working Excluded list: 
 working_excluded_files_and_folders = []
 for items in excluded_files_and_folders:
-    
-    working_excluded_files_and_folders.append(pathlib.Path(str(source_drive_letter) + items))
+    constructed_path = pathlib.Path(str(source_drive_letter) + items)
+    working_excluded_files_and_folders.append(constructed_path)
+    if str(items.endswith("/*")):   #If path ends with /* it will duplicate the path
+        x = str(constructed_path)   #So the script will ignore the actual folder too, 
+        x = x[:-1]                  #Not just the content of said folder.
+        working_excluded_files_and_folders.append(pathlib.Path(x))
+
+for item in working_excluded_files_and_folders:
+    print(item)
 
 #Walk down Source_dir to find folder and files
 for root, dirs, files in os.walk(source_dir, topdown=False):
@@ -80,14 +103,23 @@ for root, dirs, files in os.walk(source_dir, topdown=False):
     for name in files:
         x = (pathlib.Path(os.path.join(root, name)))  
         list_of_files.append(x)
+
+
+for excludeditem in working_excluded_files_and_folders: 
     for item in list_of_files:
-        # if item in working_excluded_files_and_folders:
-        if (fnmatch.filter(item, working_excluded_files_and_folders)): #Does not expect list
-            print("Found exception. removing")
+        x = str(item)
+        y = str(excludeditem)
+        if (fnmatch.fnmatch(x, y)): #Does not expect list
+            print("\nFound exception, Removing:")
+            print("Item:         " + str(item))
+            print("excludeditem: " + str(excludeditem))
             list_of_files.remove(item)
         else: 
             pass
 
+
+# for items in list_of_files:
+#     print(items)
         
 
 for items in list_of_files:
