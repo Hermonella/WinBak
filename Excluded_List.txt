@@ -1,0 +1,22 @@
+"C:\$WinREAgent"
+"C:\$Windows.~WS"
+"C:\ESD"
+"C:\Intel"
+"C:\OneDriveTemp"
+"C:\PerfLogs"
+"C:\Program Files (x86)"
+"C:\Program Files"
+"C:\ProgramData"
+"C:\Programmer"
+"C:\Users"
+"C:\Windows"
+C:\$Recycle.Bin
+C:\Config.Msi
+C:\Documents and Settings
+C:\Recovery
+"C:\$WINDOWS.~BT"
+C:\System Volume Information
+C:\Programfiler
+C:\WORKFOLDER\Historiekart
+C:\WORKFOLDER\index Browser
+C:\WORKFOLDER\WinBak
