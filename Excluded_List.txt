@@ -1,3 +1,12 @@
+#Files
+*.sys
+*.tmp
+*.ink
+*\desktop.ini
+C:\Config.Msi
+
+
+#Folders
 "C:\$WinREAgent"
 "C:\$Windows.~WS"
 "C:\ESD"
@@ -8,15 +17,49 @@
 "C:\Program Files"
 "C:\ProgramData"
 "C:\Programmer"
-"C:\Users"
 "C:\Windows"
 C:\$Recycle.Bin
-C:\Config.Msi
 C:\Documents and Settings
 C:\Recovery
-"C:\$WINDOWS.~BT"
+C:\$WINDOWS.~BT
 C:\System Volume Information
 C:\Programfiler
+
+#Profile folders.
+C:\Users\*\.vscode
+C:\Users\*\AppData
+C:\Users\*\NTUSER.*
+C:\Users\*\AndrMask
+C:\Users\*\Cookies
+C:\Users\*\Local settings
+C:\Users\*\Lokale innstillinger
+C:\Users\*\Maler
+C:\Users\*\Programdata
+C:\Users\*\Recent
+C:\Users\*\Saved Games
+C:\Users\*\SendTo
+C:\Users\*\Skrivere
+C:\Users\*\Start-meny
+C:\Users\*\IntelGraphicsProfiles
+C:\Users\*\ntuser.dat*
+
+C:\Users\*\Test
+
+
+
+
+#Default Profiles, usually nothing to copy here.
+C:\Users\Default
+C:\Users\Public\AccountPictures
+C:\Users\Public\Libraries
+C:\Users\Public\Documents\Intern video
+C:\Users\Public\Documents\Min musikk
+C:\Users\Public\Documents\Mine bilder
+
+#These are here to mostly speed up testing. 
 C:\WORKFOLDER\Historiekart
 C:\WORKFOLDER\index Browser
 C:\WORKFOLDER\WinBak
+C:\WORKFOLDER\
+C:\Users\tov\OneDrive
+C:\Users\tov\Downloads\

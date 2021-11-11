@@ -9,10 +9,55 @@ import socket
 from tkinter import Tk, filedialog
 import itertools
 import fnmatch
-import tqdm
+from tqdm import tqdm
+import wmi
+from hurry.filesize import size, alternative
 
 
 import Excluded_Files_And_Folders 
+
+def func_source_drive_letter():
+    # DRIVE_TYPES = {
+    #   0 : "Unknown",
+    #   1 : "No Root Directory",
+    #   2 : "Removable Disk",
+    #   3 : "Local Disk",
+    #   4 : "Network Drive",
+    #   5 : "Compact Disc",
+    #   6 : "RAM Disk"
+    # }
+
+    print("Wich drive do you want to backup? ")
+    for disk in wmi.WMI().Win32_LogicalDisk(DriveType=3):
+        # print(disk)
+        disk_space = size(int(disk.Size), system=alternative)
+        # print(disk_space + " space in total on drive " + disk.caption)
+        print ("Drive " + disk.caption + "   " + disk_space)
+
+
+
+    source_disk = input("Select drive (Letters only): ").upper()
+    ask_later = False
+    if len(source_disk) >= 2: #check If source_disk is more than 1 character. 
+        ask_later = True
+    #Make letter uppercase, and filter out everything except letters.
+    source_disk = source_disk.upper()
+    source_disk = source_disk.join(filter(set("ABCDEFGHIJKLMNOPQRSTUVWXYZ").__contains__, source_disk))
+    source_disk = source_disk[0]
+
+    if ask_later == True:
+        confirm_source_letter = input("Current selected drive is " + source_disk + " Is this correct? (Y/N").upper()
+        if ask_later == True and confirm_source_letter == "Y":  
+            return(source_disk)
+        if ask_later == True and confirm_source_letter == "N":  
+            func_source_drive_letter()
+        if confirm_source_letter == "":
+            func_source_drive_letter()
+        else: 
+            print("Error in Input.")
+            sys.exit()
+    else: return(source_disk)
+
 
 def func_smb_get_server_address(): #Currently not in use, might delete later.
     smb_server_address = input("SMB IP or Hostname: ")
@@ -43,136 +88,138 @@ root.withdraw() #Hides small tkinger window. Try without it once.
 root.attributes('-topmost', True) #Open tkinter window over everything else.
 
 
-source_dir: str = pathlib.Path('C:/WORKFOLDER/WinBak/Test Folders/Source/')
-target_dir: str = pathlib.Path('C:/WORKFOLDER/WinBak/Test Folders/Destination/')
+# source_dir: str = pathlib.Path('C:/WORKFOLDER/WinBak/Test Folders/Source/')
+# target_dir: str = pathlib.Path('C:/WORKFOLDER/WinBak/Test Folders/Destination/')
 
 
 
-list_of_files = []
+list_of_files_and_folders = []
 
-debugmode = True
+debugmode = False
 
 if debugmode == True: 
     source_drive_letter = "c".upper() #This is usually pathlib.path
-    # print(source_drive_letter)
-    smb_domain = "x"
-    smb_user = "x"
-    smb_password = "x"
     smb_local_machine_name = socket.gethostname()
-    smb_server_backup_target_location = pathlib.Path("C:\WORKFOLDER\WinBak\Test Folders\Destination") #returns Server location Path
-    # print(smb_server_backup_target_location)
+    # smb_server_backup_target_location = pathlib.Path("C:\WORKFOLDER\WinBak\Test Folders\Destination") #returns Server location Path
 
 else:
-    # source_drive_letter = input("Source Drive Letter: ")
-    print("Choose witch drive to backup: ")
-    source_drive_letter = pathlib.Path(filedialog.askdirectory(title = "Choose drive to backup")) #TODO Change to just writing the drive letter
-    print(source_drive_letter)
-
-
-    #Set all SMB variables. Such as wich drive to backup, and where to save it.
-    smb_domain = input("SMB Domain: ")
-    smb_user = input("SMB Username: ") 
-    smb_password = getpass(prompt="SMB Password: ")
-    smb_local_machine_name = socket.gethostname()
-    # smb_server_name = input("SMB Server name: ")
-    # smb_server_address = func_smb_get_server_address()
-    # smb_server_backup_location = 
+    source_drive_letter = func_source_drive_letter()
     print("Select backup target location: ")
     smb_server_backup_target_location = pathlib.Path(filedialog.askdirectory(title = "Select backup target location")) #returns Server location Path
-    # print(smb_server_backup_target_location)
     target_dir = smb_server_backup_target_location
 #TODO: The above script needs to handle empty inputs.
 
 
 #retrive list of exclutions
-excluded_files_and_folders = Excluded_Files_And_Folders.create_exluded_folders_list(source_drive_letter) ##Double check that this works
+excluded_files_and_folders = Excluded_Files_And_Folders.create_exluded_folders_list(source_drive_letter, "Exclude") 
 
-
-
+includes_files_and_folders = Excluded_Files_And_Folders.create_exluded_folders_list(source_drive_letter, "Include")
+#Include list does not work
 
 #Make source_drive_letter correctly formattet: This needs to be done after retriving exclutions
 source_drive_letter = source_drive_letter + ":\\"
-# print(source_drive_letter)
-
-
-#Create the working Excluded list: 
-# working_excluded_files_and_folders = []
-# for items in excluded_files_and_folders:
-#     constructed_path = pathlib.Path(str(source_drive_letter) + items)
-#     working_excluded_files_and_folders.append(constructed_path)
-#     if str(items.endswith("/*")):   #If path ends with /* it will duplicate the path
-#         x = str(constructed_path)   #So the script will ignore the actual folder too, 
-#         x = x[:-1]                  #Not just the content of said folder.
-#         working_excluded_files_and_folders.append(pathlib.Path(x))
-
-# for item in excluded_files_and_folders:
-#     print(item)
 
 #Walk down source_drive_letter to find folder and files
+# includes = r'|'.join([fnmatch.translate(x) for x in includes_files_and_folders])
+# excludes = r'|'.join([fnmatch.translate(x) for x in excluded_files_and_folders]) or r'$.'
 
-includes = ["*"]
 
+includes_files = []
+includes_folders = []
+for f in includes_files_and_folders:
+    f_str = str(f)
+    f = pathlib.Path(f)
+    if f.is_file():
+        includes_files.append(f_str)
+    if f.is_dir():
+        includes_folders.append(f_str)
+
+
+includes = r'|'.join([fnmatch.translate(x) for x in includes_files_and_folders])
 excludes = r'|'.join([fnmatch.translate(x) for x in excluded_files_and_folders]) or r'$.'
+
+includes_files_pattern = r'|'.join([fnmatch.translate(x) for x in includes_files])
 
 for root, dirs, files in os.walk(source_drive_letter, topdown=True, followlinks=False):
     dirs[:] = [os.path.join(root,d) for d in dirs]
-    dirs[:] = [d for d in dirs if not re.match(excludes, d)]
+    dirs[:] = [d for d in dirs if not re.match(excludes, d)] #Breakdown: dirs[:](This is the current list or dirs.) = [d(Declare variable) for d in dirs(Normal for loop) if not re.match(excludes, d)(Check if d is not in excludes list)]
 
-    #Directories now works. Files are the next challenge :D
 
-    
+    files = [os.path.join(root, f) for f in files]
+    # files = [f for f in files if re.match(includes, f)]
+    files = [f for f in files if not re.match(excludes, f)]
+    # files = [f for f in files if re.match(includes, f)]
+
+
     for i in dirs:
-        print(i)
-print("ttt")
-    # dirs = os.path.join(root,name)
-    # dirs[:] = [d for d in dirs if root+d not in excluded_files_and_folders]
-    # for name in dirs:
-    #     x = (pathlib.Path(os.path.join(root, name)))  
-    #     list_of_files.insert(0, x) #Place folders first in list
-    # for name in files:
-    #     x = (pathlib.Path(os.path.join(root, name)))  
-    #     list_of_files.append(x)
-
-# for p in source_dir.rglob("*"):
-#     if os.path.isfile(p):
-#         list_of_files.append(p)
-#     if os.path.isdir(p):
-#         list_of_files.insert(0, p) #Place folders first in list
+        i = pathlib.Path(i)
+        list_of_files_and_folders.append(i)
+    for i in files:
+        i = pathlib.Path(i)
+        list_of_files_and_folders.append(i)
 
 
+#Add included_list entries to the copy list
+for folders in includes_folders:
+    for root, dirs, files in os.walk(folders, topdown=True, followlinks=False):
+        dirs[:] = [os.path.join(root,d) for d in dirs]
+        dirs[:] = [d for d in dirs if not re.match(excludes, d)] #Breakdown: dirs[:](This is the current list or dirs.) = [d(Declare variable) for d in dirs(Normal for loop) if not re.match(excludes, d)(Check if d is not in excludes list)]
 
-print("asd")
+        files = [os.path.join(root, f) for f in files]
+        files = [f for f in files if not re.match(excludes, f)]
+        # files = [f for f in files if re.match(includes_files_pattern, f)]
+
+        for i in dirs:
+            i = pathlib.Path(i)
+            list_of_files_and_folders.append(i)
+        for i in files:
+            i = pathlib.Path(i)
+            list_of_files_and_folders.append(i)
+for i in includes_files:
+    i = pathlib.Path(i)
+    list_of_files_and_folders.append(i)
 
 
 
 
+f = open("list_of_files.log", "w", encoding="utf-8")
+for i in list_of_files_and_folders:
+    f.write(str(i) + "\n")
 
+f.close()
+print("Done listing.")
+print("Done listing.")
 
-for excludeditem in excluded_files_and_folders: 
-    for item in list_of_files:
-        x = str(item)
-        y = str(excludeditem)
-        if (fnmatch.fnmatch(x, y)): #Does not expect list
-            print("\nFound exception, Removing:")
-            print("Item:         " + str(item))
-            print("excludeditem: " + str(excludeditem))
-            list_of_files.remove(item)
-        else: 
-            pass
-
-
-for items in list_of_files:
-    print(items)
-        
-
-for items in tqdm(list_of_files):
-    if os.path.isdir(items):
+error_during_copy = False
+for items in tqdm(list_of_files_and_folders):
+    if items.is_dir():
         x = target_dir / items.relative_to(items.anchor)
         x.mkdir(parents=True, exist_ok=True) #Create directory in Target_dir
-        # print("x: " + str(x)) #Debug
-        pass
-    if os.path.isfile(items):
+    if items.is_file():
         x = target_dir / items.relative_to(items.anchor)
-        shutil.copy(items, x)
-        pass
-    # else: print("Error with: " + str(items))
+        try:
+            os.makedirs(x, exist_ok=True)
+            shutil.copy2(items, x)
+        except Exception as e:
+            print("Error copying file: " + str(items))
+            print("Printing error to FILE_COPY_ERROR.log")
+            error = open("FILE_COPY_ERROR.log", "a", encoding="utf-8")
+            error.write(str(e) + "\n")
+            error_during_copy = True
+            continue
+            
+            #Make the above not freak out if a file in included_files are missing
+
+
+
+if error_during_copy == True: 
+    print("Copy finished with error. Check FILE_COPY_ERROR.log for info.")
+    x = input("Print FILE_COPY_ERROR.log to console? (Y/N): ").upper()
+    if x == "Y":
+        with open("FILE_COPY_ERROR.log", "r") as f:
+            print(f.read())
+    if x == "N":
+        sys.exit()
+else:
+    print("Copy finished without error. Yhay!")
+
