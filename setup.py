@@ -9,7 +9,6 @@ setup(name='WinBak',
     #   packages=['funniest'],
       install_requires=[
           'tkinter',
-          'fnmatch',
           'tqdm',
           'wmi',
           'hurry.filesize',

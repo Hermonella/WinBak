@@ -1,18 +1,21 @@
-# from ntpath import join
+# Included in python
 import shutil
 import pathlib
 import os
 import re
 import sys
-# import socket
-from tkinter import Tk, filedialog
 import fnmatch
-from tqdm import tqdm
-import wmi
+#These are installed with PiP
 from hurry.filesize import size, alternative
-#End of dependencies from pip
+import wmi
+from tqdm import tqdm
+from tkinter import Tk, filedialog
 
+#These are local files
 import Excluded_Files_And_Folders 
+
+
+
 
 def func_source_drive_letter():
     # DRIVE_TYPES = {
