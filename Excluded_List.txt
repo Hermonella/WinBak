@@ -43,8 +43,9 @@ C:\Users\*\Start-meny
 C:\Users\*\IntelGraphicsProfiles
 C:\Users\*\ntuser.dat*
 
-C:\Users\*\Test
 
+#Other Folders
+*\.git
 
 
 
@@ -62,4 +63,5 @@ C:\WORKFOLDER\index Browser
 C:\WORKFOLDER\WinBak
 C:\WORKFOLDER\
 C:\Users\tov\OneDrive
+C:\Users\*\Test
 C:\Users\tov\Downloads\
