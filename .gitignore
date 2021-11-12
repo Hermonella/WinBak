@@ -1,3 +1,6 @@
 FILE_COPY_ERROR.log
 list_of_files.log
 WinBak.egg-info/
+Test Folders/
+testfile.py
+__pycache__/

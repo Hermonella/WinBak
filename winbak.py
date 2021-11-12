@@ -60,37 +60,11 @@ def func_source_drive_letter():
     else: return(source_disk)
 
 
-# def func_smb_get_server_address(): #Currently not in use, might delete later.
-#     smb_server_address = input("SMB IP or Hostname: ")
-#     if re.search(r'^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$', smb_server_address):
-#         print("IP: " + smb_server_address)
-#         pass
-#     if re.search(r'^[A-Za-z]+$', smb_server_address):
-#         try: 
-#             smb_server_address = socket.gethostbyname(smb_server_address)
-#             print("Hostname: " + smb_server_address)
-#             return(smb_server_address)
-
-#         except Exception as e: 
-#             error = str(e)
-#             if (error.find("[Errno 11001]") != -1):
-#                 print("Error getting IP address. Check spelling of hostname.")
-#                 sys.exit
-#             else: 
-#                 print("Unknown Error: " + str(error))
-#                 sys.exit
-#     else: 
-#         print("Error with Server address. Check speilling.")
-#         sys.exit
 
 #Setup TKinter:
 root = Tk() #Sett root to Tk()
 root.withdraw() #Hides small tkinger window. Try without it once.
 root.attributes('-topmost', True) #Open tkinter window over everything else.
-
-
-# source_dir: str = pathlib.Path('C:/WORKFOLDER/WinBak/Test Folders/Source/')
-# target_dir: str = pathlib.Path('C:/WORKFOLDER/WinBak/Test Folders/Destination/')
 
 
 
@@ -100,8 +74,7 @@ debugmode = False
 
 if debugmode == True: 
     source_drive_letter = "c".upper() #This is usually pathlib.path
-    # smb_local_machine_name = socket.gethostname()
-    # smb_server_backup_target_location = pathlib.Path("C:\WORKFOLDER\WinBak\Test Folders\Destination") #returns Server location Path
+
 
 else:
     source_drive_letter = func_source_drive_letter()

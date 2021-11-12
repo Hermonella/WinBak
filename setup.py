@@ -1,16 +1,8 @@
-from setuptools import setup
+import os
 
-setup(name='WinBak',
-      version='0.9',
-      description='Script for automatically backup Windows.',
-      url='https://github.com/Hermonella/WinBak',
-      author='Hermonella',
-      author_email='tovare13@gmail.com ',
-    #   packages=['funniest'],
-      install_requires=[
-          'tkinter',
-          'tqdm',
-          'wmi',
-          'hurry.filesize',
-      ],
-      zip_safe=False)
+
+#Install dependencies:
+for i in open("requirements.txt", "r"):
+    os.system("pip install " + i)
+        
+os.system("python winbak.py")
