@@ -67,9 +67,9 @@ def func_source_drive_letter():
                 sys.exit()
         else: return(source_disk)
 
-    if platform.system() == "Linux":
-        import psutil
-        psutil.disk_partitions()
+    # if platform.system() == "Linux":
+    #     import psutil
+    #     psutil.disk_partitions()
 
 
 
