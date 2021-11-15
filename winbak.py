@@ -5,9 +5,9 @@ import os
 import re
 import sys
 import fnmatch
+import platform
 #These are installed with PiP
 from hurry.filesize import size, alternative
-import wmi
 from tqdm import tqdm
 from tkinter import Tk, filedialog
 
@@ -15,49 +15,62 @@ from tkinter import Tk, filedialog
 import Excluded_Files_And_Folders 
 
 
-
+# #Find OS:
+# if platform.system() == "Windows":
+#     current_os = "Windows"
+# if platform.system() == "Linux":
+#     current_os = "Linux"
 
 def func_source_drive_letter():
-    # DRIVE_TYPES = {
-    #   0 : "Unknown",
-    #   1 : "No Root Directory",
-    #   2 : "Removable Disk",
-    #   3 : "Local Disk",
-    #   4 : "Network Drive",
-    #   5 : "Compact Disc",
-    #   6 : "RAM Disk"
-    # }
+    if platform.system() == "Windows":
 
-    print("Wich drive do you want to backup? ")
-    for disk in wmi.WMI().Win32_LogicalDisk(DriveType=3):
-        # print(disk)
-        disk_space = size(int(disk.Size), system=alternative)
-        # print(disk_space + " space in total on drive " + disk.caption)
-        print ("Drive " + disk.caption + "   " + disk_space)
+        # DRIVE_TYPES = {
+        #   0 : "Unknown",
+        #   1 : "No Root Directory",
+        #   2 : "Removable Disk",
+        #   3 : "Local Disk",
+        #   4 : "Network Drive",
+        #   5 : "Compact Disc",
+        #   6 : "RAM Disk"
+        # }
+        import wmi
+
+        #This does not work on linux. Need a Linux way so it can be used via USB.
+        print("Wich drive do you want to backup? ")
+        for disk in wmi.WMI().Win32_LogicalDisk(DriveType=3):
+            # print(disk)
+            disk_space = size(int(disk.Size), system=alternative)
+            # print(disk_space + " space in total on drive " + disk.caption)
+            print ("Drive " + disk.caption + "   " + disk_space)
 
 
 
-    source_disk = input("Select drive (Letters only): ").upper()
-    ask_later = False
-    if len(source_disk) >= 2: #check If source_disk is more than 1 character. 
-        ask_later = True
-    #Make letter uppercase, and filter out everything except letters.
-    source_disk = source_disk.upper()
-    source_disk = source_disk.join(filter(set("ABCDEFGHIJKLMNOPQRSTUVWXYZ").__contains__, source_disk))
-    source_disk = source_disk[0]
+        source_disk = input("Select drive (Letters only): ").upper()
+        ask_later = False
+        if len(source_disk) >= 2: #check If source_disk is more than 1 character. 
+            ask_later = True
+        #Make letter uppercase, and filter out everything except letters.
+        source_disk = source_disk.upper()
+        source_disk = source_disk.join(filter(set("ABCDEFGHIJKLMNOPQRSTUVWXYZ").__contains__, source_disk))
+        source_disk = source_disk[0]
 
-    if ask_later == True:
-        confirm_source_letter = input("Current selected drive is " + source_disk + " Is this correct? (Y/N").upper()
-        if ask_later == True and confirm_source_letter == "Y":  
-            return(source_disk)
-        if ask_later == True and confirm_source_letter == "N":  
-            func_source_drive_letter()
-        if confirm_source_letter == "":
-            func_source_drive_letter()
-        else: 
-            print("Error in Input.")
-            sys.exit()
-    else: return(source_disk)
+        if ask_later == True:
+            confirm_source_letter = input("Current selected drive is " + source_disk + " Is this correct? (Y/N").upper()
+            if ask_later == True and confirm_source_letter == "Y":  
+                return(source_disk)
+            if ask_later == True and confirm_source_letter == "N":  
+                func_source_drive_letter()
+            if confirm_source_letter == "":
+                func_source_drive_letter()
+            else: 
+                print("Error in Input.")
+                sys.exit()
+        else: return(source_disk)
+
+    if platform.system() == "Linux":
+        import psutil
+        psutil.disk_partitions()
+
 
 
 
@@ -75,8 +88,8 @@ debugmode = False
 if debugmode == True: 
     source_drive_letter = "c".upper() #This is usually pathlib.path
 
-
 else:
+
     source_drive_letter = func_source_drive_letter()
     print("Select backup target location: ")
     smb_server_backup_target_location = pathlib.Path(filedialog.askdirectory(title = "Select backup target location")) #returns Server location Path
