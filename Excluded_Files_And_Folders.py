@@ -14,7 +14,7 @@ def create_exluded_folders_list(source_drive_letter, exclude_include):
     excluded_files_and_folders = []
     with open(files_and_folders_list) as f:
         for lines in f:
-            if lines[0] != "#":
+            if lines[0] != "#": #Ignores lines with #. Makes it possible to make comments in exclude/include file.
                 lines = lines.strip() #remove \n charachter. Placed outside loop to not create wmtpy entry in list.
                 # print(repr(lines))
                 if lines != "":
@@ -29,26 +29,19 @@ def create_exluded_folders_list(source_drive_letter, exclude_include):
                     if lines.startswith('\"') and lines.endswith('\"'):
                         lines = lines[1:-1]
 
-                    # if lines.startswith("\'") and lines.endswith("\'"):
-                    #     lines = lines[1:-1]
-                    #     print("remove ' : " + lines)
-
-                    #Check if string is a file, or folder.
-                    filename, file_extention = os.path.splitext(lines)
-                    # if file_extention == "": #If it is a folder make sure it ends with "/" or "*"
-                    #     if not (lines.endswith("*")):
-                    #         if not (lines.endswith("/")):
-                    #             lines = lines + "/*"
-
                     #Check if item have drive letter, and remove. And add correct letter.
                     if re.match("^[a-zA-Z]:\\\\", lines): #Find drive letter in beginning of string
                         lines = lines[3:]
-                        
-                    lines = source_drive_letter.upper() + ":\\" + lines #Add correct drive letter.
 
-                    # if lines.endswith("/*"): #If path ends with /* it will duplicate the path So the script will ignore the actual folder too, Not just the content of said folder.
-                    #     lines_new_ending = lines.replace("*","")
-                    #     excluded_files_and_folders += [lines_new_ending]
+                    if platform.system() == "Windows":                           
+                        lines = source_drive_letter.upper() + ":\\" + lines #Add correct drive letter.
+
+
+                    if platform.system() == "Linux":
+                        lines = source_drive_letter.upper() + ":\\" + lines #Add correct drive letter.
+                        ##Currently finding correct way of making this work. 
+                        #Figure out how folders are structured in Linux towards local drives.
+
                     
                     excluded_files_and_folders += [lines]
                     # print(repr(lines))
@@ -60,3 +53,22 @@ def create_exluded_folders_list(source_drive_letter, exclude_include):
     return(excluded_files_and_folders)
 
 # create_exluded_folders_list(source_drive_letter)
+
+
+
+
+#Everything bellow are leftover code i don't want to delete just yet
+                    # if lines.startswith("\'") and lines.endswith("\'"):
+                    #     lines = lines[1:-1]
+                    #     print("remove ' : " + lines)
+
+                    #Check if string is a file, or folder.
+                    filename, file_extention = os.path.splitext(lines)
+                    # if file_extention == "": #If it is a folder make sure it ends with "/" or "*"
+                    #     if not (lines.endswith("*")):
+                    #         if not (lines.endswith("/")):
+                    #             lines = lines + "/*"
+
+                    # if lines.endswith("/*"): #If path ends with /* it will duplicate the path So the script will ignore the actual folder too, Not just the content of said folder.
+                    #     lines_new_ending = lines.replace("*","")
+                    #     excluded_files_and_folders += [lines_new_ending]
