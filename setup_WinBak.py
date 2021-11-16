@@ -51,7 +51,8 @@ if platform.system() == 'Linux':
     
 
 print("\n\n")
-print(os.getcwd)
+x= os.getcwd()
+print(x)
 input("Press Enter")
 
 
