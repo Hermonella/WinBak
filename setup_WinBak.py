@@ -25,7 +25,7 @@ if not os.getcwd() == WinBak_tmp_folder:
 
     # os.chdir(WinBak_tmp_folder)
     user_desktop = "~/Desktop/"
-    shutil.copy("tmp/WinBak/setup_WinBak.py", user_desktop)
+    shutil.copy(WinBak_tmp_folder + "/setup_WinBak.py", user_desktop)
     os.chdir(WinBak_tmp_folder)
     # os.system("cd /tmp/WinBak")
     os.system("sudo python3 setup_WinBak.py")
