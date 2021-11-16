@@ -2,6 +2,9 @@ import os
 import platform
 import shutil
 
+
+
+
 if platform.system() == 'Linux':
     os.system("sudo apt install git -y")
 
@@ -21,7 +24,8 @@ if not os.getcwd() == WinBak_tmp_folder:
         branch='Copy-From-Linux-Live-USB')
 
     # os.chdir(WinBak_tmp_folder)
-    
+    user_desktop = os.path("~/Desktop")
+    shutil.copy("tmp/WinBak/setup_WinBak.py", user_desktop)
     os.chdir(WinBak_tmp_folder)
     # os.system("cd /tmp/WinBak")
     os.system("sudo python3 setup_WinBak.py")
