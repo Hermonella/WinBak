@@ -21,9 +21,10 @@ if not os.getcwd() == WinBak_tmp_folder:
         branch='Copy-From-Linux-Live-USB')
 
     # os.chdir(WinBak_tmp_folder)
+    
     os.chdir(WinBak_tmp_folder)
     # os.system("cd /tmp/WinBak")
-    os.system("sudo python3 setup.py")
+    os.system("sudo python3 setup_WinBak.py")
 
 
 
@@ -34,20 +35,20 @@ dep = [
     "GitPython"
 ]
 
+if os.getcwd() == WinBak_tmp_folder:
+    #Install dependencies only when in /tmp:
+    for i in dep:
+        os.system("pip3 install " + i)
 
-#Install dependencies:
-for i in dep:
-    os.system("pip3 install " + i)
-
-if platform.system() == "Windows":
-    os.system("pip3 install wmi")
-    os.system("pip3 install tk")
-if platform.system() == 'Linux':
-    os.system("pip3 install psutil")
-    print("\nInstalling tkinter via apt-get. For some reason this can't be done via pip...")
-    os.system("sudo apt install python3-tk -y")
-    print("\nSame for git.")
-    os.system("sudo apt install git -y")
+    if platform.system() == "Windows":
+        os.system("pip3 install wmi")
+        os.system("pip3 install tk")
+    if platform.system() == 'Linux':
+        os.system("pip3 install psutil")
+        print("\nInstalling tkinter via apt-get. For some reason this can't be done via pip...")
+        os.system("sudo apt install python3-tk -y")
+        print("\nSame for git.")
+        os.system("sudo apt install git -y")
     
 
 print("\n\n")
