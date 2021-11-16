@@ -62,6 +62,6 @@ C:\WORKFOLDER\Historiekart
 C:\WORKFOLDER\index Browser
 C:\WORKFOLDER\WinBak
 C:\WORKFOLDER\
-C:\Users\tov\OneDrive
+C:\Users\*\OneDrive
 C:\Users\*\Test
-C:\Users\tov\Downloads\
+C:\Users\*\Downloads\

@@ -3,6 +3,14 @@ import re
 import platform
 
 
+###
+###    This file returns the drive path to the backup source. 
+###    The backup target loation is handled in winbak.py
+###
+
+
+
+
 # source_drive_letter = "c".upper()
 def create_exluded_folders_list(source_drive_letter, exclude_include):
     if exclude_include == "Include":
@@ -63,7 +71,7 @@ def create_exluded_folders_list(source_drive_letter, exclude_include):
                     #     print("remove ' : " + lines)
 
                     #Check if string is a file, or folder.
-                    filename, file_extention = os.path.splitext(lines)
+                    #filename, file_extention = os.path.splitext(lines)
                     # if file_extention == "": #If it is a folder make sure it ends with "/" or "*"
                     #     if not (lines.endswith("*")):
                     #         if not (lines.endswith("/")):

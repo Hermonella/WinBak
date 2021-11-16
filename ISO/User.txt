@@ -1,5 +1,0 @@
-User: WinBak
-PW: winbak
-
-Root:
-PW: winbak
