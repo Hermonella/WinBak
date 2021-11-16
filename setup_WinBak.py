@@ -23,9 +23,10 @@ if not os.getcwd() == WinBak_tmp_folder:
         WinBak_tmp_folder,
         branch='Copy-From-Linux-Live-USB')
         
-    # Create / update Desktop Shortcut
-    user_desktop = os.path.join(os.path.join(os.path.expanduser('~')), 'Desktop')
-    shutil.copy(WinBak_tmp_folder + "/setup_WinBak.py", user_desktop)
+    # Create / update Desktop Shortcut. Linux is tested, Windows is not.
+    if platform.system() == 'Linux':
+        user_desktop = os.path.join(os.path.join(os.path.expanduser('~')), 'Desktop')
+        shutil.copy(WinBak_tmp_folder + "/setup_WinBak.py", user_desktop)
 
 
     os.chdir(WinBak_tmp_folder)
@@ -62,4 +63,4 @@ print(x)
 input("Press Enter")
 
 
-# os.system("python winbak.py")
+os.system("python3 winbak.py")

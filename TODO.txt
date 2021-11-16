@@ -1,8 +1,17 @@
 For linux version:
-Setup.py needs to get the newest files from Bolvar. This is for easy development at first, but will be added to own config later too.
 Check for sudo, gain sudo if it does not have.
+Setup only works on Linux. Tweak it to make it work with Windows.
+
+
+
 
 Nett-Opp Version:
 Setup.py needs to get the newest files from Bolvar. and then run again(?)
 Create login background with username and PW.
 Shortcut to WinBak folder, and find i way to make it a file.
+
+
+
+Links for later: 
+
+https://stackoverflow.com/questions/34275782/how-to-get-desktop-location
