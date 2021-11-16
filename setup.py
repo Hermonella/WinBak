@@ -1,6 +1,24 @@
 import os
 import platform
-import shutil
+
+
+if platform.system() == 'Linux':
+    os.system("sudo apt install git -y")
+
+
+print("\n\n\n\n\n\n")
+#Download WinBak from Github. SMB is too hard at this stage og the script.
+from git import Repo
+if not os.getcwd() == "/tmp/WinBak":
+    Repo.clone_from(
+        "https://github.com/Hermonella/WinBak.git",
+        "/tmp/WinBak",
+        branch='Copy-From-Linux-Live-USB')
+
+    # os.chdir("/tmp/WinBak")
+    os.system("cd /tmp/WinBak")
+    os.system("sudo python3 setup.py")
+
 
 
 
@@ -26,19 +44,7 @@ if platform.system() == 'Linux':
     os.system("sudo apt install git -y")
     
 
-print("\n\n\n\n\n\n")
-# shutil.rmtree("/tmp/WinBak/")
-#Download WinBak from Github. SMB is too hard at this stage og the script.
-from git import Repo
-if not os.getcwd() == "/tmp/WinBak":
-    Repo.clone_from(
-        "https://github.com/Hermonella/WinBak.git",
-        "/tmp/WinBak",
-        branch='Copy-From-Linux-Live-USB')
 
-    # os.chdir("/tmp/WinBak")
-    os.system("cd /tmp/WinBak")
-    os.system("sudo python3 setup.py")
 
 input("Press Enter")
 
