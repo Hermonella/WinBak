@@ -1,12 +1,34 @@
 For linux version:
 Check for sudo, gain sudo if it does not have.
+
+
+Generelt: 
+Burte jeg lage ett GUI? Da burte det være mulig å gjøre programmet enklere å bruke?
+
+Også har jeg tenkt på hvordan jeg kan få til en progress bar:
+    Lag en liste over filer som skal kopieres, og lag ett eget felt med hvor stor filen er. 
+    Når scriptet går gjennom listen så vil den plusse alt det sammen, så vi får totalen.
+    For å få gjeldene total fremdrift, så plusser skriptet på gjeldene fil når den er ferdig kopiert.
+        dette burte gjøres slik, for å få mest nyaktig estimat: (ferdig_kopierte_filer + gjeldene_fil) / totalt_av_alle_filer * 100 = Antal prosent ferdig.
+    For å få gjeldene_fil størrelse så sjekker jeg størrelsen på filen, for å så bruke en loop til å sjekke størrelsen på filen i target_dir
+        current_file_size = (Få filstørrelsen på filen som skal kopieres)
+         
+        for i in tqdm(Target_file / current_file_size * 100):
+            time.sleep(0.2)
+        Denne koden er ikke testet, men forklarer hvordan jeg tenker det skal gjøres.
+        
+
+
+
+setup:
+Check if pip modules are installed. This is possible, just need to do the work.
 Setup only works on Linux. Tweak it to make it work with Windows.
 
-
+Winbak: Need to work on the "source letter" part for linux
 
 
 Nett-Opp Version:
-Setup.py needs to get the newest files from Bolvar. and then run again(?)
+
 Create login background with username and PW.
 Shortcut to WinBak folder, and find i way to make it a file.
 
@@ -15,3 +37,6 @@ Shortcut to WinBak folder, and find i way to make it a file.
 Links for later: 
 
 https://stackoverflow.com/questions/34275782/how-to-get-desktop-location
+
+
+https://newbedev.com/how-to-check-if-a-module-is-installed-in-python-and-if-not-install-it-within-the-code
