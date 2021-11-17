@@ -27,10 +27,9 @@ Setup only works on Linux. Tweak it to make it work with Windows.
 Winbak: Need to work on the "source letter" part for linux
 
 
-Nett-Opp Version:
+Nett-Opp Version ISO:
 
 Create login background with username and PW.
-Shortcut to WinBak folder, and find i way to make it a file.
 
 
 
@@ -40,3 +39,6 @@ https://stackoverflow.com/questions/34275782/how-to-get-desktop-location
 
 
 https://newbedev.com/how-to-check-if-a-module-is-installed-in-python-and-if-not-install-it-within-the-code
+
+
+https://towardsdatascience.com/a-complete-guide-to-using-progress-bars-in-python-aa7f4130cda8
