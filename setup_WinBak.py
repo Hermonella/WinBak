@@ -19,7 +19,7 @@ if not os.getcwd() == WinBak_tmp_folder:
 
     from git import Repo
     Repo.clone_from(
-        "https://github.com/Hermonella/WinBak.git",
+        "https://github.com/Walmann/WinBak.git",
         WinBak_tmp_folder,
         branch='Copy-From-Linux-Live-USB')
         
